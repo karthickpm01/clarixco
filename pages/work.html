@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Clarix Co — Our work. Production projects across web development, AI, e-commerce, healthcare and more.">
+  <title>Work — Clarix Co Ltd</title>
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    .work-hero { padding: calc(var(--nav-height) + 80px) 0 60px; }
+    .work-hero__title { font-size: clamp(32px, 5vw, 60px); font-weight: 700; margin: 8px 0 16px; max-width: 600px; }
+    .work-hero__sub { font-size: 16px; color: var(--muted); max-width: 500px; line-height: 1.7; }
+
+    /* FEATURED ROW — 3 real client projects */
+    .featured-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px; }
+    .featured-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 20px; }
+    .featured-card { background: var(--surface); border: 2px solid var(--accent); border-radius: var(--radius-lg); overflow: hidden; transition: transform var(--transition), box-shadow var(--transition); position: relative; }
+    .featured-card:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(126,220,181,0.1); }
+    .featured-badge { position: absolute; top: 14px; left: 14px; z-index: 2; background: var(--accent); color: var(--bg); font-size: 9px; font-weight: 700; padding: 3px 10px; border-radius: 99px; letter-spacing: 0.06em; text-transform: uppercase; }
+
+    .filter-bar { padding: 32px 0; border-bottom: 1px solid var(--border); margin-bottom: 60px; }
+    .filter-bar__inner { display: flex; gap: 8px; flex-wrap: wrap; }
+    .filter-btn { font-size: 12px; font-weight: 500; padding: 8px 18px; border-radius: 99px; border: 1px solid var(--border); color: var(--muted); background: transparent; cursor: pointer; transition: all var(--transition); }
+    .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .filter-btn.active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+
+    .work-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 80px; }
+
+    .work-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; transition: transform var(--transition), border-color var(--transition); }
+    .work-card:hover { transform: translateY(-5px); border-color: var(--border-2); }
+
+    .work-card__img { position: relative; height: 220px; overflow: hidden; }
+    .work-card__img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; opacity: 0.9; }
+    .work-card:hover .work-card__img img { transform: scale(1.04); }
+    .featured-card .work-card__img img { opacity: 0.92; }
+
+    .work-card__overlay { position: absolute; inset: 0; background: rgba(8,12,20,0.55); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity var(--transition); }
+    .work-card:hover .work-card__overlay { opacity: 1; }
+    .featured-card:hover .work-card__overlay { opacity: 1; }
+    .work-card__view-btn { font-size: 12px; font-weight: 500; color: var(--accent); border: 1px solid var(--accent); padding: 8px 18px; border-radius: var(--radius-sm); }
+
+    .work-card__body { padding: 22px; }
+    .work-card__tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+    .work-card__title { font-size: 19px; font-weight: 600; margin-bottom: 8px; }
+    .work-card__desc { font-size: 13px; color: var(--muted); line-height: 1.65; margin-bottom: 16px; }
+    .work-card__meta { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding-top: 16px; border-top: 1px solid var(--border); margin-bottom: 16px; }
+    .work-card__meta-label { font-size: 10px; color: var(--muted-2); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 3px; }
+    .work-card__meta-val { font-size: 12px; color: var(--white); font-weight: 500; }
+    .work-card__stack { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 16px; }
+    .work-card__link { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--accent); font-weight: 500; transition: opacity var(--transition); text-decoration: none; }
+    .work-card__link:hover { opacity: 0.75; }
+    .work-card.hidden { display: none; }
+
+    .section-divider { border: none; border-top: 1px solid var(--border); margin: 40px 0 48px; }
+    .other-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted-2); margin-bottom: 20px; }
+
+    @media (max-width: 1024px) { .featured-grid { grid-template-columns: repeat(2, 1fr); } .work-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px) { .work-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+  <!-- NAVIGATION -->
+  <nav class="nav" id="nav">
+    <div class="nav__inner">
+      <a href="../index.html" class="nav__logo">Clarix<span>Co</span></a>
+      <div class="nav__links">
+        <a href="../index.html" class="nav__link">Home</a>
+        <a href="work.html" class="nav__link active">Work</a>
+        <a href="services.html" class="nav__link">Services</a>
+        <a href="blog.html" class="nav__link">Blog</a>
+        <a href="about.html" class="nav__link">About</a>
+        <a href="contact.html" class="nav__cta">Hire us</a>
+      </div>
+      <button class="nav__burger" id="burger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="nav__mobile" id="mobileMenu">
+      <a href="../index.html" class="nav__mobile-link">Home</a>
+      <a href="work.html" class="nav__mobile-link">Work</a>
+      <a href="services.html" class="nav__mobile-link">Services</a>
+      <a href="blog.html" class="nav__mobile-link">Blog</a>
+      <a href="about.html" class="nav__mobile-link">About</a>
+      <a href="contact.html" class="nav__mobile-cta">Hire us</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="work-hero">
+    <div class="container">
+      <p class="eyebrow reveal">Our work</p>
+      <h1 class="work-hero__title reveal">Every line of code, ours.</h1>
+      <p class="work-hero__sub reveal">Production-ready projects across web development, AI, e-commerce, healthcare and more — built from scratch, deployed live.</p>
+    </div>
+  </section>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <div class="container">
+      <div class="filter-bar__inner">
+        <button class="filter-btn active" data-filter="all">All projects</button>
+        <button class="filter-btn" data-filter="client">Real clients</button>
+        <button class="filter-btn" data-filter="ai">AI · SaaS</button>
+        <button class="filter-btn" data-filter="webdev">Web Dev</button>
+        <button class="filter-btn" data-filter="ecommerce">E-Commerce</button>
+        <button class="filter-btn" data-filter="healthcare">Healthcare</button>
+        <button class="filter-btn" data-filter="corporate">Corporate</button>
+        <button class="filter-btn" data-filter="restaurant">Restaurant</button>
+      </div>
+    </div>
+  </div>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+
+      <!-- FEATURED — REAL CLIENT PROJECTS -->
+      <p class="featured-label reveal">⭐ Real client projects</p>
+      <div class="featured-grid" id="featuredGrid">
+
+        <!-- JobHunt — FIRST -->
+        <div class="work-card featured-card reveal" data-category="client ai">
+          <div class="featured-badge">Live · Free to start</div>
+          <div class="work-card__img" style="background: linear-gradient(135deg, #0d0a1e 0%, #2d1f5e 100%);">
+            <img src="../images/projects/jobhunt1.png" alt="JobHunt AI — Land more interviews" onerror="this.src='https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80'">
+            <div class="work-card__overlay">
+              <a href="https://job-hunt-ai.netlify.app" target="_blank" class="work-card__view-btn">Visit live site →</a>
+            </div>
+          </div>
+          <div class="work-card__body">
+            <div class="work-card__tags">
+              <span class="tag tag--purple">AI · SaaS</span>
+              <span class="tag tag--mint">Live · No signup</span>
+            </div>
+            <h3 class="work-card__title">JobHunt AI</h3>
+            <p class="work-card__desc">One paste. Land more interviews. Paste a job description, get a cover letter grounded in your actual resume — no invented experience, no fluff. 4-step flow: tailor → letter → questions → practice out loud.</p>
+            <div class="work-card__meta">
+              <div><p class="work-card__meta-label">Free/day</p><p class="work-card__meta-val">5 generations</p></div>
+              <div><p class="work-card__meta-label">Year</p><p class="work-card__meta-val">2026</p></div>
+              <div><p class="work-card__meta-label">Hallucination rate</p><p class="work-card__meta-val">&lt;5%</p></div>
+              <div><p class="work-card__meta-label">Signup required</p><p class="work-card__meta-val">No</p></div>
+            </div>
+            <div class="work-card__stack">
+              <span class="stack-pill">React 18</span>
+              <span class="stack-pill">Gemini AI</span>
+              <span class="stack-pill">Supabase</span>
+              <span class="stack-pill">Razorpay</span>
+              <span class="stack-pill">Redis</span>
+              <span class="stack-pill">Netlify</span>
+            </div>
+            <a href="https://job-hunt-ai.netlify.app" target="_blank" class="work-card__link">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+              Visit live site
+            </a>
+          </div>
+        </div>
+
+        <!-- Build Planet Zero — SECOND -->
+        <div class="work-card featured-card reveal" data-category="client corporate">
+          <div class="featured-badge">Real client · Newcastle</div>
+          <div class="work-card__img" style="background: linear-gradient(135deg, #0a1f0a 0%, #1a4a1a 100%);">
+            <img src="../images/projects/buildplanetzero1.jpeg" alt="Build Planet Zero — Net-Zero Construction" onerror="this.src='https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80'">
+            <div class="work-card__overlay">
+              <span class="work-card__view-btn">View project</span>
+            </div>
+          </div>
+          <div class="work-card__body">
+            <div class="work-card__tags">
+              <span class="tag tag--mint">Real Client</span>
+              <span class="tag tag--teal">AI Chatbot</span>
+              <span class="tag tag--coral">Construction</span>
+            </div>
+            <h3 class="work-card__title">Build Planet Zero</h3>
+            <p class="work-card__desc">Full website for a net-zero construction company based in Newcastle upon Tyne. Features an AI assistant chatbot, quote request system, admin panel, founder profile, specialties and projects showcase.</p>
+            <div class="work-card__meta">
+              <div><p class="work-card__meta-label">Location</p><p class="work-card__meta-val">Newcastle, UK</p></div>
+              <div><p class="work-card__meta-label">Founded</p><p class="work-card__meta-val">2020</p></div>
+              <div><p class="work-card__meta-label">Industry</p><p class="work-card__meta-val">Construction</p></div>
+              <div><p class="work-card__meta-label">Key feature</p><p class="work-card__meta-val">AI Chatbot</p></div>
+            </div>
+            <div class="work-card__stack">
+              <span class="stack-pill">HTML5</span>
+              <span class="stack-pill">CSS3</span>
+              <span class="stack-pill">JavaScript</span>
+              <span class="stack-pill">AI Chatbot</span>
+              <span class="stack-pill">Python</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- London Success Academy — THIRD -->
+        <div class="work-card featured-card reveal" data-category="client webdev">
+          <div class="featured-badge">Real client · London</div>
+          <div class="work-card__img" style="background: linear-gradient(135deg, #0a0a1f 0%, #1a1a4a 100%);">
+            <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80" alt="London Success Academy — Business Coaching">
+            <div class="work-card__overlay">
+              <span class="work-card__view-btn">View project</span>
+            </div>
+          </div>
+          <div class="work-card__body">
+            <div class="work-card__tags">
+              <span class="tag tag--mint">Real Client</span>
+              <span class="tag tag--blue">Education</span>
+              <span class="tag tag--gray">Coaching</span>
+            </div>
+            <h3 class="work-card__title">London Success Academy</h3>
+            <p class="work-card__desc">Professional website for London Success Academy — a business coaching platform led by mentor Nilesh. Features coaching services, mentor profile, testimonials, course listings and contact booking system.</p>
+            <div class="work-card__meta">
+              <div><p class="work-card__meta-label">Location</p><p class="work-card__meta-val">London, UK</p></div>
+              <div><p class="work-card__meta-label">Type</p><p class="work-card__meta-val">Coaching</p></div>
+              <div><p class="work-card__meta-label">Industry</p><p class="work-card__meta-val">Education</p></div>
+              <div><p class="work-card__meta-label">Mentor</p><p class="work-card__meta-val">Nilesh</p></div>
+            </div>
+            <div class="work-card__stack">
+              <span class="stack-pill">HTML5</span>
+              <span class="stack-pill">CSS3</span>
+              <span class="stack-pill">JavaScript</span>
+              <span class="stack-pill">Supabase</span>
+              <span class="stack-pill">Netlify</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+        <!-- NicheFlow AI — FOURTH -->
+        <div class="work-card featured-card reveal" data-category="client ai">
+          <div class="featured-badge">AI SaaS · Coming soon</div>
+          <div class="work-card__img" style="background: linear-gradient(135deg, #0d0a1e 0%, #1a0a3e 100%);">
+            <img src="../images/projects/nicheflow1.png" alt="NicheFlow AI — Content Idea Generator" onerror="this.src='https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&q=80'">
+            <div class="work-card__overlay">
+              <span class="work-card__view-btn">View project</span>
+            </div>
+          </div>
+          <div class="work-card__body">
+            <div class="work-card__tags">
+              <span class="tag tag--purple">AI · SaaS</span>
+              <span class="tag tag--gray">Coming Soon</span>
+            </div>
+            <h3 class="work-card__title">NicheFlow AI</h3>
+            <p class="work-card__desc">AI content idea generator for Instagram creators. Generates niche-specific ideas, hooks, scripts, captions and content plans — without sounding robotic or generic.</p>
+            <div class="work-card__meta">
+              <div><p class="work-card__meta-label">Target</p><p class="work-card__meta-val">Creators</p></div>
+              <div><p class="work-card__meta-label">Platform</p><p class="work-card__meta-val">Instagram</p></div>
+              <div><p class="work-card__meta-label">Type</p><p class="work-card__meta-val">AI SaaS</p></div>
+              <div><p class="work-card__meta-label">Status</p><p class="work-card__meta-val">In progress</p></div>
+            </div>
+            <div class="work-card__stack">
+              <span class="stack-pill">HTML5</span>
+              <span class="stack-pill">CSS3</span>
+              <span class="stack-pill">JavaScript</span>
+              <span class="stack-pill">AI / LLM</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <hr class="section-divider">
+      <p class="other-label reveal">Portfolio projects</p>
+
+      <!-- OTHER PORTFOLIO PROJECTS -->
+      <div class="work-grid" id="workGrid">
+
+        <!-- EstateX -->
+        <div class="work-card reveal" data-category="webdev">
+          <div class="work-card__img" style="background: linear-gradient(135deg, #0A1628 0%, #1a3a6b 100%);">
+            <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80" alt="EstateX">
+            <div class="work-card__overlay"><span class="work-card__view-btn">View project</span></div>
+          </div>
+          <div class="work-card__body">
+            <div class="work-card__tags"><span class="tag tag--mint">Web Dev</span><span class="tag tag--gray">Full Stack</span></div>
+            <h3 class="work-card__title">EstateX</h3>
+            <p class="work-card__desc">Premium UK real estate platform — 9 pages, 70+ properties, Supabase backend, advanced filtering and Python serverless functions.</p>
+            <div class="work-card__meta">
+              <div><p class="work-card__meta-label">Pages</p><p class="work-card__meta-val">9 pages</p></div>
+              <div><p class="work-card__meta-label">Year</p><p class="work-card__meta-val">2025</p></div>
+              <div><p class="work-card__meta-label">Industry</p><p class="work-card__meta-val">Property</p></div>
+              <div><p class="work-card__meta-label">Database</p><p class="work-card__meta-val">12 tables</p></div>
+            </div>
+            <div class="work-card__stack"><span class="stack-pill">HTML5</span><span class="stack-pill">CSS3</span><span class="stack-pill">JavaScript</span><span class="stack-pill">Python</span><span class="stack-pill">Supabase</span><span class="stack-pill">Redis</span></div>
+          </div>
+        </div>
+
+        <!-- Lumière Beauty -->
+        <div class="work-card reveal" data-category="ecommerce">
+          <div class="work-card__img" style="background: linear-gradient(135deg, #1a0a1e 0%, #4a1a3e 100%);">
+            <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=800&q=80" alt="Lumière Beauty">
+            <div class="work-card__overlay"><span class="work-card__view-btn">View project</span></div>
+          </div>
+          <div class="work-card__body">
+            <div class="work-card__tags"><span class="tag tag--gold">E-Commerce</span><span class="tag tag--gray">Full Stack</span></div>
+            <h3 class="work-card__title">Lumière Beauty</h3>
+            <p class="work-card__desc">Luxury skincare e-commerce platform — 40+ SKUs, beauty quiz, ingredient glossary, routine builder and full checkout flow.</p>
+            <div class="work-card__meta">
+              <div><p class="work-card__meta-label">Pages</p><p class="work-card__meta-val">9 pages</p></div>
+              <div><p class="work-card__meta-label">Year</p><p class="work-card__meta-val">2025</p></div>
+              <div><p class="work-card__meta-label">Products</p><p class="work-card__meta-val">40+ SKUs</p></div>
+              <div><p class="work-card__meta-label">Industry</p><p class="work-card__meta-val">Beauty</p></div>
+            </div>
+            <div class="work-card__stack"><span class="stack-pill">HTML5</span><span class="stack-pill">CSS3</span><span class="stack-pill">JavaScript</span><span class="stack-pill">Supabase</span><span class="stack-pill">Netlify</span></div>
+          </div>
+        </div>
+
+        <!-- MediCore -->
+        <div class="work-card reveal" data-category="healthcare">
+          <div class="work-card__img" style="background: linear-gradient(135deg, #0a1628 0%, #0d4a4a 100%);">
+            <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&q=80" alt="MediCore">
+            <div class="work-card__overlay"><span class="work-card__view-btn">View project</span></div>
+          </div>
+          <div class="work-card__body">
+            <div class="work-card__tags"><span class="tag tag--teal">Healthcare</span><span class="tag tag--gray">WCAG 2.1 AA</span></div>
+            <h3 class="work-card__title">MediCore</h3>
+            <p class="work-card__desc">Digital health platform — doctor directory, patient portal, appointment booking and Twilio SMS integration.</p>
+            <div class="work-card__meta">
+              <div><p class="work-card__meta-label">Pages</p><p class="work-card__meta-val">9 pages</p></div>
+              <div><p class="work-card__meta-label">Year</p><p class="work-card__meta-val">2025</p></div>
+              <div><p class="work-card__meta-label">DB tables</p><p class="work-card__meta-val">15 tables</p></div>
+              <div><p class="work-card__meta-label">Industry</p><p class="work-card__meta-val">Healthcare</p></div>
+            </div>
+            <div class="work-card__stack"><span class="stack-pill">HTML5</span><span class="stack-pill">Python</span><span class="stack-pill">Supabase</span><span class="stack-pill">Twilio</span></div>
+          </div>
+        </div>
+
+        <!-- Ironclad Construction -->
+        <div class="work-card reveal" data-category="corporate">
+          <div class="work-card__img" style="background: linear-gradient(135deg, #0f1923 0%, #2a1a0a 100%);">
+            <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80" alt="Ironclad Construction">
+            <div class="work-card__overlay"><span class="work-card__view-btn">View project</span></div>
+          </div>
+          <div class="work-card__body">
+            <div class="work-card__tags"><span class="tag tag--coral">Corporate</span><span class="tag tag--gray">B2B</span></div>
+            <h3 class="work-card__title">Ironclad Construction</h3>
+            <p class="work-card__desc">Premium construction company website — client portal, Gantt timeline, quote calculator and Python serverless backend.</p>
+            <div class="work-card__meta">
+              <div><p class="work-card__meta-label">Pages</p><p class="work-card__meta-val">9 pages</p></div>
+              <div><p class="work-card__meta-label">Year</p><p class="work-card__meta-val">2025</p></div>
+              <div><p class="work-card__meta-label">Industry</p><p class="work-card__meta-val">Construction</p></div>
+              <div><p class="work-card__meta-label">Type</p><p class="work-card__meta-val">B2B Corporate</p></div>
+            </div>
+            <div class="work-card__stack"><span class="stack-pill">HTML5</span><span class="stack-pill">CSS3</span><span class="stack-pill">Python</span><span class="stack-pill">Supabase</span><span class="stack-pill">Netlify</span></div>
+          </div>
+        </div>
+
+        <!-- Ember & Gold -->
+        <div class="work-card reveal" data-category="restaurant">
+          <div class="work-card__img" style="background: linear-gradient(135deg, #0c0906 0%, #2a1a00 100%);">
+            <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80" alt="Ember and Gold">
+            <div class="work-card__overlay"><span class="work-card__view-btn">View project</span></div>
+          </div>
+          <div class="work-card__body">
+            <div class="work-card__tags"><span class="tag tag--gold">Restaurant</span><span class="tag tag--gray">Frontend</span></div>
+            <h3 class="work-card__title">Ember &amp; Gold</h3>
+            <p class="work-card__desc">Cinematic Michelin-star restaurant website — hero slider, tabbed menu, reservation system. Zero dependencies.</p>
+            <div class="work-card__meta">
+              <div><p class="work-card__meta-label">Pages</p><p class="work-card__meta-val">6 pages</p></div>
+              <div><p class="work-card__meta-label">Year</p><p class="work-card__meta-val">2025</p></div>
+              <div><p class="work-card__meta-label">Dependencies</p><p class="work-card__meta-val">Zero</p></div>
+              <div><p class="work-card__meta-label">Industry</p><p class="work-card__meta-val">Hospitality</p></div>
+            </div>
+            <div class="work-card__stack"><span class="stack-pill">HTML5</span><span class="stack-pill">CSS3</span><span class="stack-pill">JavaScript</span><span class="stack-pill">Netlify</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <section class="cta-banner">
+    <div class="container">
+      <div class="cta-banner__inner reveal">
+        <div>
+          <h2 class="cta-banner__title">Like what you see?</h2>
+          <p class="cta-banner__sub">Let's build something just as good for your business.</p>
+        </div>
+        <a href="contact.html" class="btn btn--primary">Start a project</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <a href="../index.html" class="nav__logo">Clarix<span>Co</span></a>
+          <p class="footer__tagline">London-based.<br>Globally delivered.</p>
+          <p class="footer__reg">Registered in England &amp; Wales<br>Clarix Co Ltd · London</p>
+        </div>
+        <div class="footer__col">
+          <p class="footer__col-title">Services</p>
+          <a href="services.html" class="footer__link">Web Development</a>
+          <a href="services.html" class="footer__link">Data Analytics</a>
+          <a href="services.html" class="footer__link">AI Solutions</a>
+        </div>
+        <div class="footer__col">
+          <p class="footer__col-title">Company</p>
+          <a href="work.html" class="footer__link">Work</a>
+          <a href="blog.html" class="footer__link">Blog</a>
+          <a href="about.html" class="footer__link">About</a>
+          <a href="contact.html" class="footer__link">Contact</a>
+        </div>
+        <div class="footer__col">
+          <p class="footer__col-title">Get in touch</p>
+          <a href="mailto:hello@clarixco.co.uk" class="footer__link">hello@clarixco.co.uk</a>
+          <a href="contact.html" class="footer__link">Start a project</a>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <p class="footer__copy">© 2026 Clarix Co Ltd · All rights reserved</p>
+        <p class="footer__copy">London, UK · Available worldwide</p>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- WHATSAPP BUTTON -->
+  <a href="https://wa.me/447XXXXXXXXX?text=Hi%20Karthick%2C%20I%27d%20like%20to%20discuss%20a%20project%20with%20Clarix%20Co"
+     target="_blank"
+     class="whatsapp-btn"
+     aria-label="Chat on WhatsApp">
+    <span class="whatsapp-tooltip">Chat on WhatsApp</span>
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+
+  <!-- AI CHATBOT TOGGLE -->
+  <button class="chat-toggle" id="chatToggle" aria-label="Open AI assistant">
+    <span class="chat-toggle__dot"></span>
+    <span class="chat-tooltip">Ask Clarix AI</span>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#080C14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  </button>
+
+  <!-- AI CHATBOT WINDOW -->
+  <div class="chat-window" id="chatWindow">
+    <div class="chat-header">
+      <div class="chat-header__info">
+        <div class="chat-header__avatar">
+          <img src="../images/founder.jpg" alt="Karthick" onerror="this.style.display='none';this.parentElement.textContent='KC'">
+        </div>
+        <div>
+          <p class="chat-header__name">Clarix Co AI</p>
+          <p class="chat-header__status"><span class="chat-header__status-dot"></span>Online — replies instantly</p>
+        </div>
+      </div>
+      <button class="chat-header__close" id="chatClose" aria-label="Close chat">✕</button>
+    </div>
+    <div class="chat-body" id="chatBody"></div>
+    <div class="chat-footer">
+      <input type="text" class="chat-input" id="chatInput" placeholder="Ask about our services..." maxlength="500" autocomplete="off">
+      <button class="chat-send" id="chatSend" aria-label="Send message">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#080C14" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <script src="../js/nav.js"></script>
+  <script src="../js/animations.js"></script>
+  <script>
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const allCards   = document.querySelectorAll('.work-card, .featured-card');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+        allCards.forEach(card => {
+          const cats = card.dataset.category || '';
+          if (filter === 'all' || cats.includes(filter)) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+  </script>
+  <script src="../js/chatbot.js"></script>
+  <script src="../js/chatbot.js"></script>
+</body>
+</html>

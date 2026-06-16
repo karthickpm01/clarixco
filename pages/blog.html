@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Clarix Co Blog — Insights on web development, data analytics and AI from our studio.">
+  <title>Blog — Clarix Co Ltd</title>
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    .blog-hero { padding: calc(var(--nav-height) + 80px) 0 60px; border-bottom: 1px solid var(--border); }
+    .blog-hero__title { font-size: clamp(32px, 5vw, 58px); font-weight: 700; margin: 8px 0 16px; }
+    .blog-hero__sub { font-size: 16px; color: var(--muted); max-width: 520px; line-height: 1.7; }
+
+    .blog-filter { padding: 28px 0; border-bottom: 1px solid var(--border); margin-bottom: 60px; }
+    .blog-filter__inner { display: flex; gap: 8px; flex-wrap: wrap; }
+    .blog-filter-btn { font-size: 12px; font-weight: 500; padding: 7px 16px; border-radius: 99px; border: 1px solid var(--border); color: var(--muted); background: transparent; cursor: pointer; transition: all var(--transition); }
+    .blog-filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .blog-filter-btn.active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+
+    .blog-layout { display: grid; grid-template-columns: 1fr 320px; gap: 48px; margin-bottom: 80px; }
+
+    .blog-featured { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); overflow: hidden; margin-bottom: 24px; transition: border-color var(--transition); cursor: pointer; }
+    .blog-featured:hover { border-color: var(--border-2); }
+    .blog-featured__img { height: 280px; position: relative; overflow: hidden; }
+    .blog-featured__img img { width: 100%; height: 100%; object-fit: cover; opacity: 0.75; transition: transform 0.5s ease; }
+    .blog-featured:hover .blog-featured__img img { transform: scale(1.03); }
+    .blog-featured__img-label { position: absolute; top: 20px; left: 20px; z-index: 2; }
+    .blog-featured__body { padding: 32px; }
+    .blog-featured__meta { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .blog-featured__date { font-size: 11px; color: var(--muted-2); }
+    .blog-featured__read { font-size: 11px; color: var(--muted-2); }
+    .blog-featured__title { font-size: 22px; font-weight: 600; line-height: 1.3; margin-bottom: 12px; }
+    .blog-featured__excerpt { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 20px; }
+    .blog-featured__author { display: flex; align-items: center; gap: 10px; }
+    .blog-featured__avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent-dim); border: 1px solid var(--accent); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: var(--accent); flex-shrink: 0; }
+    .blog-featured__author-name { font-size: 12px; font-weight: 500; color: var(--white); }
+    .blog-featured__author-role { font-size: 11px; color: var(--muted); }
+
+    .blog-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .blog-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; transition: border-color var(--transition), transform var(--transition); cursor: pointer; }
+    .blog-card:hover { border-color: var(--border-2); transform: translateY(-2px); }
+    .blog-card__img { height: 160px; position: relative; overflow: hidden; }
+    .blog-card__img img { width: 100%; height: 100%; object-fit: cover; opacity: 0.75; transition: transform 0.5s ease; }
+    .blog-card:hover .blog-card__img img { transform: scale(1.04); }
+    .blog-card__body { padding: 18px; }
+    .blog-card__meta { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .blog-card__date { font-size: 10px; color: var(--muted-2); }
+    .blog-card__read { font-size: 10px; color: var(--muted-2); }
+    .blog-card__title { font-size: 14px; font-weight: 600; line-height: 1.4; margin-bottom: 8px; }
+    .blog-card__excerpt { font-size: 12px; color: var(--muted); line-height: 1.6; }
+    .blog-card.hidden { display: none; }
+
+    .blog-sidebar {}
+    .sidebar-widget { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 20px; }
+    .sidebar-widget__title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--white); margin-bottom: 16px; }
+    .sidebar-topic { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--muted); cursor: pointer; transition: color var(--transition); }
+    .sidebar-topic:last-child { border-bottom: none; }
+    .sidebar-topic:hover { color: var(--accent); }
+    .sidebar-topic__count { font-size: 10px; background: var(--muted-3); padding: 2px 7px; border-radius: 99px; color: var(--muted-2); }
+    .sidebar-popular { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .sidebar-popular:last-child { border-bottom: none; }
+    .sidebar-popular__num { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--border-2); flex-shrink: 0; width: 28px; }
+    .sidebar-popular__title { font-size: 12px; font-weight: 500; color: var(--white); line-height: 1.4; margin-bottom: 3px; }
+    .sidebar-popular__date { font-size: 10px; color: var(--muted-2); }
+    .sidebar-newsletter__desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+    .sidebar-newsletter__input { width: 100%; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 13px; color: var(--white); margin-bottom: 10px; font-family: var(--font-body); }
+    .sidebar-newsletter__input::placeholder { color: var(--muted); }
+    .sidebar-newsletter__input:focus { outline: none; border-color: var(--accent); }
+    .sidebar-newsletter__btn { width: 100%; background: var(--accent); color: var(--bg); border: none; border-radius: var(--radius-sm); padding: 10px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: var(--font-body); transition: opacity var(--transition); }
+    .sidebar-newsletter__btn:hover { opacity: 0.85; }
+    .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border-2); display: inline-block; vertical-align: middle; }
+
+    @media (max-width: 1024px) {
+      .blog-layout { grid-template-columns: 1fr; }
+      .blog-sidebar { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    }
+    @media (max-width: 768px) {
+      .blog-grid { grid-template-columns: 1fr; }
+      .blog-sidebar { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVIGATION -->
+  <nav class="nav" id="nav">
+    <div class="nav__inner">
+      <a href="../index.html" class="nav__logo">Clarix<span>Co</span></a>
+      <div class="nav__links">
+        <a href="work.html" class="nav__link">Work</a>
+        <a href="services.html" class="nav__link">Services</a>
+        <a href="blog.html" class="nav__link active">Blog</a>
+        <a href="about.html" class="nav__link">About</a>
+        <a href="contact.html" class="nav__cta">Hire us</a>
+      </div>
+      <button class="nav__burger" id="burger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="nav__mobile" id="mobileMenu">
+      <a href="work.html" class="nav__mobile-link">Work</a>
+      <a href="services.html" class="nav__mobile-link">Services</a>
+      <a href="blog.html" class="nav__mobile-link">Blog</a>
+      <a href="about.html" class="nav__mobile-link">About</a>
+      <a href="contact.html" class="nav__mobile-cta">Hire us</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="blog-hero">
+    <div class="container">
+      <p class="eyebrow reveal">Blog</p>
+      <h1 class="blog-hero__title reveal">Insights from the studio.</h1>
+      <p class="blog-hero__sub reveal">Web development, data analytics and AI — written by the people building it. No fluff, no filler.</p>
+    </div>
+  </section>
+
+  <!-- FILTER -->
+  <div class="blog-filter">
+    <div class="container">
+      <div class="blog-filter__inner">
+        <button class="blog-filter-btn active" data-filter="all">All posts</button>
+        <button class="blog-filter-btn" data-filter="webdev">Web Dev</button>
+        <button class="blog-filter-btn" data-filter="data">Data Analytics</button>
+        <button class="blog-filter-btn" data-filter="ai">AI</button>
+        <button class="blog-filter-btn" data-filter="business">Business</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOG LAYOUT -->
+  <section style="padding-bottom: 80px;">
+    <div class="container">
+      <div class="blog-layout">
+
+        <!-- MAIN CONTENT -->
+        <div>
+
+          <!-- Featured Post — AI / JobHunt -->
+          <div class="blog-featured reveal" data-category="ai">
+            <div class="blog-featured__img">
+              <img src="https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=1200&q=80" alt="AI prompt engineering">
+              <div class="blog-featured__img-label">
+                <span class="tag tag--purple">AI</span>
+              </div>
+            </div>
+            <div class="blog-featured__body">
+              <div class="blog-featured__meta">
+                <span class="blog-featured__date">12 Jun 2026</span>
+                <span class="dot"></span>
+                <span class="blog-featured__read">8 min read</span>
+                <span class="dot"></span>
+                <span class="tag tag--mint" style="font-size:9px">Featured</span>
+              </div>
+              <h2 class="blog-featured__title">Reducing AI hallucinations to under 5% with Truth Rules prompt engineering</h2>
+              <p class="blog-featured__excerpt">When we built JobHunt, the biggest challenge wasn't the UI or the payments — it was stopping the AI from lying. Here's the 10-rule prompt framework we engineered to keep AI output honest, consistent and recruiter-ready, cutting hallucination rates from 30–40% to under 5%.</p>
+              <div class="blog-featured__author">
+                <div class="blog-featured__avatar">KC</div>
+                <div>
+                  <p class="blog-featured__author-name">Karthick</p>
+                  <p class="blog-featured__author-role">Founder, Clarix Co</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Blog Grid -->
+          <div class="blog-grid" id="blogGrid">
+
+            <!-- EstateX — Web Dev -->
+            <div class="blog-card reveal" data-category="webdev">
+              <div class="blog-card__img">
+                <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80" alt="Real estate">
+              </div>
+              <div class="blog-card__body">
+                <div class="blog-card__meta">
+                  <span class="tag tag--mint" style="font-size:9px">Web Dev</span>
+                  <span class="dot"></span>
+                  <span class="blog-card__read">6 min read</span>
+                </div>
+                <h3 class="blog-card__title">How we built a real estate platform that rivals Rightmove</h3>
+                <p class="blog-card__excerpt">Architecture decisions, URL-based deep filtering and building 70+ property listings in Vanilla JS without a single framework.</p>
+                <p style="margin-top:10px;font-size:10px;color:var(--muted-2)">08 Jun 2026</p>
+              </div>
+            </div>
+
+            <!-- Data Analytics — SMEs -->
+            <div class="blog-card reveal" data-category="data">
+              <div class="blog-card__img">
+                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80" alt="Data analytics dashboard">
+              </div>
+              <div class="blog-card__body">
+                <div class="blog-card__meta">
+                  <span class="tag tag--blue" style="font-size:9px">Data Analytics</span>
+                  <span class="dot"></span>
+                  <span class="blog-card__read">5 min read</span>
+                </div>
+                <h3 class="blog-card__title">Why UK SMEs are sitting on goldmines of untouched data</h3>
+                <p class="blog-card__excerpt">Most small businesses collect data but never use it. Here's what Power BI can surface in a single week.</p>
+                <p style="margin-top:10px;font-size:10px;color:var(--muted-2)">01 Jun 2026</p>
+              </div>
+            </div>
+
+            <!-- Lumière — Web Dev -->
+            <div class="blog-card reveal" data-category="webdev">
+              <div class="blog-card__img">
+                <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=800&q=80" alt="Luxury beauty">
+              </div>
+              <div class="blog-card__body">
+                <div class="blog-card__meta">
+                  <span class="tag tag--mint" style="font-size:9px">Web Dev</span>
+                  <span class="dot"></span>
+                  <span class="blog-card__read">7 min read</span>
+                </div>
+                <h3 class="blog-card__title">Building a luxury e-commerce site without a framework</h3>
+                <p class="blog-card__excerpt">How we built Lumière Beauty — 40+ SKUs, beauty quiz and full cart system — using only HTML, CSS and Vanilla JS.</p>
+                <p style="margin-top:10px;font-size:10px;color:var(--muted-2)">25 May 2026</p>
+              </div>
+            </div>
+
+            <!-- Business — Starting a studio -->
+            <div class="blog-card reveal" data-category="business">
+              <div class="blog-card__img">
+                <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80" alt="London business district">
+              </div>
+              <div class="blog-card__body">
+                <div class="blog-card__meta">
+                  <span class="tag tag--gray" style="font-size:9px">Business</span>
+                  <span class="dot"></span>
+                  <span class="blog-card__read">4 min read</span>
+                </div>
+                <h3 class="blog-card__title">Starting a tech studio in the UK — what nobody tells you</h3>
+                <p class="blog-card__excerpt">From Companies House to ICO registration — the honest checklist for launching a UK technology studio from scratch.</p>
+                <p style="margin-top:10px;font-size:10px;color:var(--muted-2)">18 May 2026</p>
+              </div>
+            </div>
+
+            <!-- JobHunt — AI SaaS -->
+            <div class="blog-card reveal" data-category="ai">
+              <div class="blog-card__img">
+                <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80" alt="Building SaaS product">
+              </div>
+              <div class="blog-card__body">
+                <div class="blog-card__meta">
+                  <span class="tag tag--purple" style="font-size:9px">AI</span>
+                  <span class="dot"></span>
+                  <span class="blog-card__read">6 min read</span>
+                </div>
+                <h3 class="blog-card__title">Building a SaaS product in 6 days — what we learned</h3>
+                <p class="blog-card__excerpt">The full story of JobHunt — from idea to live payments in 6 days. What worked, what broke, and why the hardest part wasn't engineering.</p>
+                <p style="margin-top:10px;font-size:10px;color:var(--muted-2)">10 May 2026</p>
+              </div>
+            </div>
+
+            <!-- Python vs Excel -->
+            <div class="blog-card reveal" data-category="data">
+              <div class="blog-card__img">
+                <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=800&q=80" alt="Python code">
+              </div>
+              <div class="blog-card__body">
+                <div class="blog-card__meta">
+                  <span class="tag tag--blue" style="font-size:9px">Data Analytics</span>
+                  <span class="dot"></span>
+                  <span class="blog-card__read">5 min read</span>
+                </div>
+                <h3 class="blog-card__title">Python vs Excel — when to use which for data analysis</h3>
+                <p class="blog-card__excerpt">The honest guide to choosing between Excel and Python. Spoiler: it depends on who needs to use the output, not the dataset size.</p>
+                <p style="margin-top:10px;font-size:10px;color:var(--muted-2)">02 May 2026</p>
+              </div>
+            </div>
+
+            <!-- Ironclad — B2B -->
+            <div class="blog-card reveal" data-category="webdev">
+              <div class="blog-card__img">
+                <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80" alt="Construction site">
+              </div>
+              <div class="blog-card__body">
+                <div class="blog-card__meta">
+                  <span class="tag tag--mint" style="font-size:9px">Web Dev</span>
+                  <span class="dot"></span>
+                  <span class="blog-card__read">5 min read</span>
+                </div>
+                <h3 class="blog-card__title">Why B2B websites need to look as good as B2C</h3>
+                <p class="blog-card__excerpt">The construction industry has some of the worst websites on the internet. Here's why that's a massive opportunity — and how Ironclad changed that.</p>
+                <p style="margin-top:10px;font-size:10px;color:var(--muted-2)">24 Apr 2026</p>
+              </div>
+            </div>
+
+            <!-- Brief writing — Business -->
+            <div class="blog-card reveal" data-category="business">
+              <div class="blog-card__img">
+                <img src="https://images.unsplash.com/photo-1553877522-43269d4ea984?w=800&q=80" alt="Writing a brief">
+              </div>
+              <div class="blog-card__body">
+                <div class="blog-card__meta">
+                  <span class="tag tag--gray" style="font-size:9px">Business</span>
+                  <span class="dot"></span>
+                  <span class="blog-card__read">4 min read</span>
+                </div>
+                <h3 class="blog-card__title">How to write a web development brief that gets results</h3>
+                <p class="blog-card__excerpt">Most project briefs are too vague or missing the most important thing — what success looks like. Here's the template we send every new client.</p>
+                <p style="margin-top:10px;font-size:10px;color:var(--muted-2)">15 Apr 2026</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- SIDEBAR -->
+        <div class="blog-sidebar">
+
+          <div class="sidebar-widget reveal">
+            <p class="sidebar-widget__title">Topics</p>
+            <div class="sidebar-topic" data-filter="webdev">Web Development <span class="sidebar-topic__count">3</span></div>
+            <div class="sidebar-topic" data-filter="data">Data Analytics <span class="sidebar-topic__count">2</span></div>
+            <div class="sidebar-topic" data-filter="ai">AI &amp; Machine Learning <span class="sidebar-topic__count">2</span></div>
+            <div class="sidebar-topic" data-filter="business">Business <span class="sidebar-topic__count">2</span></div>
+          </div>
+
+          <div class="sidebar-widget reveal">
+            <p class="sidebar-widget__title">Popular posts</p>
+            <div class="sidebar-popular">
+              <span class="sidebar-popular__num">01</span>
+              <div><p class="sidebar-popular__title">Reducing AI hallucinations to under 5%</p><p class="sidebar-popular__date">12 Jun 2026 · 8 min read</p></div>
+            </div>
+            <div class="sidebar-popular">
+              <span class="sidebar-popular__num">02</span>
+              <div><p class="sidebar-popular__title">Building a SaaS product in 6 days</p><p class="sidebar-popular__date">10 May 2026 · 6 min read</p></div>
+            </div>
+            <div class="sidebar-popular">
+              <span class="sidebar-popular__num">03</span>
+              <div><p class="sidebar-popular__title">Why UK SMEs are sitting on goldmines of data</p><p class="sidebar-popular__date">01 Jun 2026 · 5 min read</p></div>
+            </div>
+            <div class="sidebar-popular">
+              <span class="sidebar-popular__num">04</span>
+              <div><p class="sidebar-popular__title">Starting a tech studio in the UK</p><p class="sidebar-popular__date">18 May 2026 · 4 min read</p></div>
+            </div>
+          </div>
+
+          <div class="sidebar-widget reveal">
+            <p class="sidebar-widget__title">Stay updated</p>
+            <p class="sidebar-newsletter__desc">Get new articles on web dev, data and AI — straight to your inbox. No spam, ever.</p>
+            <input type="email" class="sidebar-newsletter__input" placeholder="Your email address">
+            <button class="sidebar-newsletter__btn">Subscribe</button>
+          </div>
+
+          <div class="sidebar-widget reveal">
+            <p class="sidebar-widget__title">Work with us</p>
+            <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px">Got a project in mind? We'd love to hear about it.</p>
+            <a href="contact.html" class="btn btn--primary" style="width:100%;justify-content:center;font-size:13px">Start a project</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <section class="cta-banner">
+    <div class="container">
+      <div class="cta-banner__inner reveal">
+        <div>
+          <h2 class="cta-banner__title">Want us to write about something specific?</h2>
+          <p class="cta-banner__sub">Send us a topic — if we know it well, we'll write about it.</p>
+        </div>
+        <a href="contact.html" class="btn btn--primary">Get in touch</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <a href="../index.html" class="nav__logo">Clarix<span>Co</span></a>
+          <p class="footer__tagline">London-based.<br>Globally delivered.</p>
+          <p class="footer__reg">Registered in England &amp; Wales<br>Clarix Co Ltd · London</p>
+        </div>
+        <div class="footer__col">
+          <p class="footer__col-title">Services</p>
+          <a href="services.html" class="footer__link">Web Development</a>
+          <a href="services.html" class="footer__link">Data Analytics</a>
+          <a href="services.html" class="footer__link">AI Solutions</a>
+        </div>
+        <div class="footer__col">
+          <p class="footer__col-title">Company</p>
+          <a href="work.html" class="footer__link">Work</a>
+          <a href="blog.html" class="footer__link">Blog</a>
+          <a href="about.html" class="footer__link">About</a>
+          <a href="contact.html" class="footer__link">Contact</a>
+        </div>
+        <div class="footer__col">
+          <p class="footer__col-title">Get in touch</p>
+          <a href="mailto:hello@clarixco.co.uk" class="footer__link">hello@clarixco.co.uk</a>
+          <a href="contact.html" class="footer__link">Start a project</a>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <p class="footer__copy">© 2026 Clarix Co Ltd · All rights reserved</p>
+        <p class="footer__copy">London, UK · Available worldwide</p>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- WHATSAPP BUTTON -->
+  <a href="https://wa.me/447XXXXXXXXX?text=Hi%20Karthick%2C%20I%27d%20like%20to%20discuss%20a%20project%20with%20Clarix%20Co"
+     target="_blank"
+     class="whatsapp-btn"
+     aria-label="Chat on WhatsApp">
+    <span class="whatsapp-tooltip">Chat on WhatsApp</span>
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+
+  <!-- AI CHATBOT TOGGLE -->
+  <button class="chat-toggle" id="chatToggle" aria-label="Open AI assistant">
+    <span class="chat-toggle__dot"></span>
+    <span class="chat-tooltip">Ask Clarix AI</span>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#080C14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  </button>
+
+  <!-- AI CHATBOT WINDOW -->
+  <div class="chat-window" id="chatWindow">
+    <div class="chat-header">
+      <div class="chat-header__info">
+        <div class="chat-header__avatar">
+          <img src="../images/founder.jpg" alt="Karthick" onerror="this.style.display='none';this.parentElement.textContent='KC'">
+        </div>
+        <div>
+          <p class="chat-header__name">Clarix Co AI</p>
+          <p class="chat-header__status"><span class="chat-header__status-dot"></span>Online — replies instantly</p>
+        </div>
+      </div>
+      <button class="chat-header__close" id="chatClose" aria-label="Close chat">✕</button>
+    </div>
+    <div class="chat-body" id="chatBody"></div>
+    <div class="chat-footer">
+      <input type="text" class="chat-input" id="chatInput" placeholder="Ask about our services..." maxlength="500" autocomplete="off">
+      <button class="chat-send" id="chatSend" aria-label="Send message">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#080C14" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <script src="../js/nav.js"></script>
+  <script src="../js/animations.js"></script>
+  <script>
+    const filterBtns = document.querySelectorAll('.blog-filter-btn');
+    const blogCards  = document.querySelectorAll('.blog-card');
+
+    function applyFilter(filter) {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      document.querySelectorAll(`[data-filter="${filter}"]`).forEach(b => b.classList.add('active'));
+      blogCards.forEach(card => {
+        if (filter === 'all' || card.dataset.category === filter) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => applyFilter(btn.dataset.filter));
+    });
+
+    document.querySelectorAll('.sidebar-topic').forEach(topic => {
+      topic.addEventListener('click', () => applyFilter(topic.dataset.filter));
+    });
+  </script>
+  <script src="../js/chatbot.js"></script>
+  <script src="../js/chatbot.js"></script>
+</body>
+</html>
